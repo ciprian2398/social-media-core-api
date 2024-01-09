@@ -2,7 +2,6 @@ package com.socialmedia.coreapi.service
 
 import com.socialmedia.coreapi.model.User
 import com.socialmedia.coreapi.repository.UserRepository
-import lombok.AllArgsConstructor
 import org.springframework.stereotype.Service
 
 @Service
