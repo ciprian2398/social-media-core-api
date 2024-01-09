@@ -1,5 +1,6 @@
-package com.socialmedia.coreapi.controller;
+package com.socialmedia.coreapi.controller
 
+import com.socialmedia.coreapi.dto.UserDTO;
 import com.socialmedia.coreapi.model.User;
 import com.socialmedia.coreapi.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -29,8 +30,8 @@ class UserController {
             @ApiResponse(responseCode = "409", description = "Conflict - User already exists")
     ])
     @PostMapping
-    ResponseEntity<String> createUser(@RequestBody User user) {
-        userService.createUser(user);
+    ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
+        userService.createUser(userDTO);
         ResponseEntity.status(HttpStatus.CREATED).body("User created successfully")
     }
 

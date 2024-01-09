@@ -1,5 +1,6 @@
 package com.socialmedia.coreapi.service
 
+import com.socialmedia.coreapi.dto.UserDTO
 import com.socialmedia.coreapi.model.User
 import com.socialmedia.coreapi.repository.UserRepository
 import org.springframework.stereotype.Service
@@ -14,7 +15,10 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    User createUser(User user) {
+    User createUser(UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName())
+        user.setEmail(userDTO.getEmail())
         userRepository.save(user);
     }
 

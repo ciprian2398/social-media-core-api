@@ -3,7 +3,7 @@ package com.socialmedia.coreapi.dto
 import lombok.Data
 
 @Data
-class UserDto {
+class UserDTO {
     String name
     String email
 }

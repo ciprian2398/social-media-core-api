@@ -1,9 +1,10 @@
-package com.socialmedia.coreapi.service;
+package com.socialmedia.coreapi.service
 
+import com.socialmedia.coreapi.dto.UserDTO;
 import com.socialmedia.coreapi.model.User;
 
-public interface UserService {
-    User createUser(User user);
+interface UserService {
+    User createUser(UserDTO user);
 
     boolean userExists(Long userId);
 
