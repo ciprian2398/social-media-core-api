@@ -9,12 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "User", description = "User management APIs")
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v1/users")
 class UserController {
 
     private final UserService userService;
@@ -30,6 +30,7 @@ class UserController {
             @ApiResponse(responseCode = "409", description = "Conflict - User already exists")
     ])
     @PostMapping
+//    @PreAuthorize("hasRole('client_user')")
     ResponseEntity<String> createUser(@RequestBody UserDTO userDTO) {
         userService.createUser(userDTO);
         ResponseEntity.status(HttpStatus.CREATED).body("User created successfully")
