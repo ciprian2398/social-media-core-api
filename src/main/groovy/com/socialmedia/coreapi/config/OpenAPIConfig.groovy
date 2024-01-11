@@ -14,21 +14,21 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 class OpenAPIConfig {
 
-    @Value('${com.socialmedia.coreapi.devUrl}')
-    private String devUrl
+    @Value('${com.socialmedia.coreapi.url}')
+    private String selfUrl
 
-    @Value('${com.socialmedia.coreapi.prodUrl}')
-    private String prodUrl
+    @Value('${com.socialmedia.auth.url}')
+    private String authUrl
 
     @Bean
     OpenAPI myOpenAPI() {
-        Server devServer = new Server()
-        devServer.setUrl(devUrl)
-        devServer.setDescription("Server URL in Development environment")
+        Server selfServer = new Server()
+        selfServer.setUrl(selfUrl)
+        selfServer.setDescription("Social media core api service")
 
-        Server prodServer = new Server()
-        prodServer.setUrl(prodUrl)
-        prodServer.setDescription("Server URL in Production environment")
+        Server authServer = new Server()
+        authServer.setUrl(authUrl)
+        authServer.setDescription("Authentication server")
 
         Contact contact = new Contact()
         contact.setEmail("ciprian.nicuta.dev@gmail.com")
@@ -47,7 +47,7 @@ class OpenAPIConfig {
                         .addList("Bearer Authentication"))
                 .components(new Components()
                         .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
-                .servers(List.of(devServer, prodServer))
+                .servers(List.of(selfServer, authServer))
     }
 
     private static SecurityScheme createAPIKeyScheme() {
