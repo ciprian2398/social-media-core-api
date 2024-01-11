@@ -21,22 +21,24 @@ class SecurityConfig {
     }
 
     @Bean
-     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
-                .authorizeHttpRequests()
-                .anyRequest()
-                .authenticated();
+                .authorizeHttpRequests(a -> a
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+
 
         http
                 .oauth2ResourceServer()
                 .jwt()
-                .jwtAuthenticationConverter(jwtAuthConverter);
+                .jwtAuthenticationConverter(jwtAuthConverter)
 
         http
                 .sessionManagement()
-                .sessionCreationPolicy(STATELESS);
+                .sessionCreationPolicy(STATELESS)
 
         return http.build();
     }

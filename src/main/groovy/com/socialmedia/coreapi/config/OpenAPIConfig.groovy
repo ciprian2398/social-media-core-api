@@ -1,8 +1,11 @@
 package com.socialmedia.coreapi.config
 
+import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Contact
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.security.SecurityRequirement
+import io.swagger.v3.oas.models.security.SecurityScheme
 import io.swagger.v3.oas.models.servers.Server
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
@@ -18,7 +21,7 @@ class OpenAPIConfig {
     private String prodUrl
 
     @Bean
-     OpenAPI myOpenAPI() {
+    OpenAPI myOpenAPI() {
         Server devServer = new Server()
         devServer.setUrl(devUrl)
         devServer.setDescription("Server URL in Development environment")
@@ -38,6 +41,18 @@ class OpenAPIConfig {
                 .description("This API exposes endpoints to manage socialmedia project.")
 
 
-        new OpenAPI().info(info).servers(List.of(devServer, prodServer))
+        new OpenAPI()
+                .info(info)
+                .addSecurityItem(new SecurityRequirement()
+                        .addList("Bearer Authentication"))
+                .components(new Components()
+                        .addSecuritySchemes("Bearer Authentication", createAPIKeyScheme()))
+                .servers(List.of(devServer, prodServer))
+    }
+
+    private static SecurityScheme createAPIKeyScheme() {
+        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+                .bearerFormat("JWT")
+                .scheme("bearer");
     }
 }
