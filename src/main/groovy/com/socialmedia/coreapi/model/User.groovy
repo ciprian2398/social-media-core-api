@@ -10,6 +10,6 @@ public class User {
 
     @Id
     ObjectId id
-     String name;
-     String email;
+    String name;
+    String email;
 }

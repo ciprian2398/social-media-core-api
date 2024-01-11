@@ -1,5 +1,6 @@
 package com.socialmedia.coreapi.config
 
+import com.socialmedia.coreapi.service.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.core.convert.converter.Converter
 import org.springframework.lang.NonNull
@@ -21,6 +22,12 @@ class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter()
 
+    UserService userService;
+
+    JwtAuthConverter(UserService userService) {
+        this.userService = userService
+    }
+
     @Value('${jwt.auth.converter.principle-attribute}')
     private String principleAttribute
 
@@ -33,6 +40,8 @@ class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
                 jwtGrantedAuthoritiesConverter.convert(jwt).stream(),
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet())
+
+        userService.createUserFromJWT(jwt);
 
         return new JwtAuthenticationToken(jwt, authorities, getPrincipleClaimName(jwt))
     }
