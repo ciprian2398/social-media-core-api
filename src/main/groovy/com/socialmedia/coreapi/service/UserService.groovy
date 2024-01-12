@@ -1,17 +1,13 @@
 package com.socialmedia.coreapi.service
 
-import com.socialmedia.coreapi.dto.UserDTO;
 import com.socialmedia.coreapi.model.User
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.Jwt
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 interface UserService {
-    User createUser(UserDTO user)
 
-    boolean userExists(Long userId)
+    Mono<User> createUserFromJwtJsonPayload(Jwt jwt)
 
-    void updateUser(User updatedUser)
-
-    void markUserAsDeleted(Long userId)
-
-    void createUserFromJWT(Jwt jwt)
+    Flux<User> findAllUsers()
 }

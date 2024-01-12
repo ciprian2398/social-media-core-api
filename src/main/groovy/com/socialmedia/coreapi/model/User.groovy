@@ -1,15 +1,19 @@
 package com.socialmedia.coreapi.model
 
-
+import groovy.transform.Canonical
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.mapping.Document
 
+@Canonical
 @Document(collection = "users")
-public class User {
-
+class User {
     @Id
     ObjectId id
-    String name;
-    String email;
+    String subject
+    String username
+    String givenName
+    String familyName
+    String email
+    List<ObjectId> followers = []
 }

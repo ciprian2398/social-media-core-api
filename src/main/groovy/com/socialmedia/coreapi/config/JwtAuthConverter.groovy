@@ -22,7 +22,7 @@ class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
     private final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter =
             new JwtGrantedAuthoritiesConverter()
 
-    UserService userService;
+    UserService userService
 
     JwtAuthConverter(UserService userService) {
         this.userService = userService
@@ -41,7 +41,7 @@ class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
                 extractResourceRoles(jwt).stream()
         ).collect(Collectors.toSet())
 
-        userService.createUserFromJWT(jwt);
+        userService.createUserFromJwtJsonPayload(jwt).block()
 
         return new JwtAuthenticationToken(jwt, authorities, getPrincipleClaimName(jwt))
     }
@@ -51,7 +51,7 @@ class JwtAuthConverter implements Converter<Jwt, AbstractAuthenticationToken> {
         if (principleAttribute != null) {
             claimName = principleAttribute
         }
-        return jwt.getClaim(claimName)
+        jwt.getClaim(claimName)
     }
 
     private Collection<? extends GrantedAuthority> extractResourceRoles(Jwt jwt) {

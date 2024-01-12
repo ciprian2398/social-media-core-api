@@ -1,11 +1,11 @@
 package com.socialmedia.coreapi.service
 
-import com.socialmedia.coreapi.dto.UserDTO
 import com.socialmedia.coreapi.model.User
 import com.socialmedia.coreapi.repository.UserRepository
-import groovy.json.JsonSlurper
 import org.springframework.security.oauth2.jwt.Jwt
 import org.springframework.stereotype.Service
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 class UserServiceImpl implements UserService {
@@ -17,42 +17,20 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
-    User createUser(UserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName())
-        user.setEmail(userDTO.getEmail())
-        userRepository.save(user);
+    Flux<User> findAllUsers() {
+        return userRepository.findAll()
     }
 
     @Override
-    boolean userExists(Long userId) {
-        userRepository.existsById(userId);
-    }
-
-    @Override
-    void updateUser(User updatedUser) {
-
-    }
-
-    @Override
-    void markUserAsDeleted(Long userId) {
-
-    }
-
-    @Override
-    void createUserFromJWT(Jwt jwt) {
-
-        String[] chunks = jwt.tokenValue.split("\\.");
-
-        Base64.Decoder decoder = Base64.getUrlDecoder();
-
-        String payload = new String(decoder.decode(chunks[1]));
-        def jsonSlurper = new JsonSlurper()
-        def object = jsonSlurper.parseText(payload)
-
-        def user = new User();
-        user.setEmail(object.name)
-        user.setName(object.email)
-        userRepository.save(user);
+    Mono<User> createUserFromJwtJsonPayload(Jwt jwt) {
+        if (!userRepository.existsByEmail(jwt.getClaim("email")).block()) {
+            def user = new User()
+            user.setSubject(jwt.getClaim("sub"))
+            user.setUsername(jwt.getClaim("preferred_username"))
+            user.setGivenName(jwt.getClaim("given_name"))
+            user.setFamilyName(jwt.getClaim("family_name"))
+            user.setEmail(jwt.getClaim("email"))
+            userRepository.save(user)
+        }
     }
 }

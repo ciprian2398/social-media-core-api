@@ -14,7 +14,7 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableMethodSecurity
 class SecurityConfig {
 
-    private final JwtAuthConverter jwtAuthConverter;
+    private final JwtAuthConverter jwtAuthConverter
 
     SecurityConfig(JwtAuthConverter jwtAuthConverter) {
         this.jwtAuthConverter = jwtAuthConverter
@@ -40,6 +40,6 @@ class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS)
 
-        return http.build();
+        return http.build()
     }
 }

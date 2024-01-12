@@ -53,6 +53,6 @@ class OpenAPIConfig {
     private static SecurityScheme createAPIKeyScheme() {
         return new SecurityScheme().type(SecurityScheme.Type.HTTP)
                 .bearerFormat("JWT")
-                .scheme("bearer");
+                .scheme("bearer")
     }
 }
