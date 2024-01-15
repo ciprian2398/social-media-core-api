@@ -1,10 +1,10 @@
 package com.socialmedia.coreapi.controller
 
 import com.socialmedia.coreapi.dto.PostDTO
-import com.socialmedia.coreapi.model.Post
 import com.socialmedia.coreapi.service.AuthenticationService
 import com.socialmedia.coreapi.service.PostService
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import reactor.core.publisher.Mono
 
@@ -24,18 +24,21 @@ class PostController {
     }
 
     @PostMapping
-    Mono<Post> createPost(@RequestBody PostDTO postDTO) {
+    Mono<ResponseEntity> createPost(@RequestBody PostDTO postDTO) {
         postService.createPost(postDTO, authenticationFacade.getPrincipalSub())
+                .map(ResponseEntity::ok)
     }
 
     @PutMapping("/{postId}")
-    Mono<Post> updatePost(@RequestBody PostDTO postDTO, @PathVariable("postId") String postId) {
+    Mono<ResponseEntity> updatePost(@RequestBody PostDTO postDTO, @PathVariable("postId") String postId) {
         postService.updatePost(postDTO, postId, authenticationFacade.getPrincipalSub())
+                .map(ResponseEntity::ok)
     }
 
     @DeleteMapping("/{postId}")
-    Mono<Void> deletePost(@PathVariable("postId") String postId) {
+    Mono<ResponseEntity> deletePost(@PathVariable("postId") String postId) {
         postService.deletePost(postId, authenticationFacade.getPrincipalSub())
+                .map(ResponseEntity::ok)
     }
 }
 
