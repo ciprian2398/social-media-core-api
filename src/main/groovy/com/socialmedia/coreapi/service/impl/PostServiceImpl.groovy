@@ -2,6 +2,7 @@ package com.socialmedia.coreapi.service.impl
 
 import com.socialmedia.coreapi.dto.PostDTO
 import com.socialmedia.coreapi.model.Post
+import com.socialmedia.coreapi.model.User
 import com.socialmedia.coreapi.repository.PostRepository
 import com.socialmedia.coreapi.repository.UserRepository
 import com.socialmedia.coreapi.service.PostService
@@ -50,5 +51,23 @@ class PostServiceImpl implements PostService {
                 .flatMap(tuple -> {
                     postRepository.delete(tuple.t1)
                 })
+    }
+
+    @Override
+    Mono<Void> likePost(Mono<User> user, String postId) {
+        user.zipWith(postRepository.findById(postId))
+                .flatMap(tuple -> {
+                    tuple.t2.likes.add(new Post.Like(tuple.t1.getId()))
+                    postRepository.save(tuple.t2)
+                }).then()
+    }
+
+    @Override
+    Mono<Void> unlikePost(Mono<User> user, String postId) {
+        user.zipWith(postRepository.findById(postId))
+                .flatMap(tuple -> {
+                    tuple.t2.likes.removeIf(like -> like.userId == tuple.t1.getId())
+                    postRepository.save(tuple.t2)
+                }).then()
     }
 }

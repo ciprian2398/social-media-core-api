@@ -40,6 +40,18 @@ class PostController {
         postService.deletePost(postId, authenticationService.getPrincipalSub())
                 .map(ResponseEntity::ok)
     }
+
+    @PostMapping("/{postId}/like")
+    Mono<ResponseEntity> likePost(@PathVariable("postId") String postId) {
+        postService.likePost(authenticationService.getPrincipalUser(), postId)
+                .map(ResponseEntity::ok)
+    }
+
+    @PostMapping("/{postId}/unlike")
+    Mono<ResponseEntity> unlikePost(@PathVariable("postId") String postId) {
+        postService.unlikePost(authenticationService.getPrincipalUser(), postId)
+                .map(ResponseEntity::ok)
+    }
 }
 
 
