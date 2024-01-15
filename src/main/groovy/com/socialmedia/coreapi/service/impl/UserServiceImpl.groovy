@@ -23,6 +23,30 @@ class UserServiceImpl implements UserService {
     }
 
     @Override
+    Mono<Void> follow(Mono<User> userWhichFollows, String userToBeFollowed) {
+        userWhichFollows
+                .zipWith(userRepository.findById(userToBeFollowed))
+                .filter(tuple -> !tuple.t1.getId().equals(tuple.t2.getId()))
+                .filter(tuple -> !tuple.t2.followers.contains(tuple.t1.getId()))
+                .flatMap(tuple -> {
+                    tuple.t2.followers.add(tuple.t1.getId())
+                    userRepository.save(tuple.t2)
+                }).then()
+    }
+
+    @Override
+    Mono<Void> unfollow(Mono<User> userWhichFollows, String userToBeUnfollowed) {
+        userWhichFollows
+                .zipWith(userRepository.findById(userToBeUnfollowed))
+                .filter(tuple -> !tuple.t1.getId().equals(tuple.t2.getId()))
+                .filter(tuple -> tuple.t2.followers.contains(tuple.t1.getId()))
+                .flatMap(tuple -> {
+                    tuple.t2.followers.remove(tuple.t1.getId())
+                    userRepository.save(tuple.t2)
+                }).then()
+    }
+
+    @Override
     Mono<User> createUserFromJwtJsonPayload(Jwt jwt) {
         userRepository.existsByEmail(jwt.getClaim("email"))
                 .filter(exists -> !exists)

@@ -10,4 +10,8 @@ interface UserService {
     Mono<User> createUserFromJwtJsonPayload(Jwt jwt)
 
     Flux<User> findAllUsers()
+
+    Mono<Void> follow(Mono<User> userWhichFollows, String userToBeFollowed)
+
+    Mono<Void> unfollow(Mono<User> userWhichFollows, String userToBeFollowed)
 }

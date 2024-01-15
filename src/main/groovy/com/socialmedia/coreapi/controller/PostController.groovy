@@ -13,31 +13,31 @@ import reactor.core.publisher.Mono
 @RequestMapping("/api/v1/posts")
 class PostController {
 
-    private AuthenticationService authenticationFacade;
+    private AuthenticationService authenticationService;
 
     private final PostService postService
 
     PostController(PostService postService,
-                   AuthenticationService authenticationFacade) {
+                   AuthenticationService authenticationService) {
         this.postService = postService
-        this.authenticationFacade = authenticationFacade
+        this.authenticationService = authenticationService
     }
 
     @PostMapping
     Mono<ResponseEntity> createPost(@RequestBody PostDTO postDTO) {
-        postService.createPost(postDTO, authenticationFacade.getPrincipalSub())
+        postService.createPost(postDTO, authenticationService.getPrincipalSub())
                 .map(ResponseEntity::ok)
     }
 
     @PutMapping("/{postId}")
     Mono<ResponseEntity> updatePost(@RequestBody PostDTO postDTO, @PathVariable("postId") String postId) {
-        postService.updatePost(postDTO, postId, authenticationFacade.getPrincipalSub())
+        postService.updatePost(postDTO, postId, authenticationService.getPrincipalSub())
                 .map(ResponseEntity::ok)
     }
 
     @DeleteMapping("/{postId}")
     Mono<ResponseEntity> deletePost(@PathVariable("postId") String postId) {
-        postService.deletePost(postId, authenticationFacade.getPrincipalSub())
+        postService.deletePost(postId, authenticationService.getPrincipalSub())
                 .map(ResponseEntity::ok)
     }
 }

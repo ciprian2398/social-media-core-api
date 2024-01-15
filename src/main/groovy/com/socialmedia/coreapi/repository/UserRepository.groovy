@@ -1,6 +1,5 @@
 package com.socialmedia.coreapi.repository
 
-import com.socialmedia.coreapi.model.Post
 import com.socialmedia.coreapi.model.User
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository
 import org.springframework.stereotype.Repository
