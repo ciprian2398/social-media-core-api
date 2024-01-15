@@ -23,14 +23,16 @@ class UserServiceImpl implements UserService {
 
     @Override
     Mono<User> createUserFromJwtJsonPayload(Jwt jwt) {
-        if (!userRepository.existsByEmail(jwt.getClaim("email")).block()) {
-            def user = new User()
-            user.setSubject(jwt.getClaim("sub"))
-            user.setUsername(jwt.getClaim("preferred_username"))
-            user.setGivenName(jwt.getClaim("given_name"))
-            user.setFamilyName(jwt.getClaim("family_name"))
-            user.setEmail(jwt.getClaim("email"))
-            userRepository.save(user)
-        }
+        userRepository.existsByEmail(jwt.getClaim("email"))
+                .filter(exists -> !exists)
+                .flatMap(v -> {
+                    def user = new User()
+                    user.setSubject(jwt.getClaim("sub"))
+                    user.setUsername(jwt.getClaim("preferred_username"))
+                    user.setGivenName(jwt.getClaim("given_name"))
+                    user.setFamilyName(jwt.getClaim("family_name"))
+                    user.setEmail(jwt.getClaim("email"))
+                    return userRepository.save(user)
+                })
     }
 }
