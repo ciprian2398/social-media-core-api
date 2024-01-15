@@ -1,6 +1,7 @@
 package com.socialmedia.coreapi.controller
 
 import com.socialmedia.coreapi.dto.PostDTO
+import com.socialmedia.coreapi.mapper.PostMapper
 import com.socialmedia.coreapi.service.AuthenticationService
 import com.socialmedia.coreapi.service.PostService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -13,25 +14,29 @@ import reactor.core.publisher.Mono
 @RequestMapping("/api/v1/posts")
 class PostController {
 
+    private PostMapper postMapper
+    private PostService postService
     private AuthenticationService authenticationService;
 
-    private final PostService postService
-
-    PostController(PostService postService,
+    PostController(PostMapper postMapper,
+                   PostService postService,
                    AuthenticationService authenticationService) {
+        this.postMapper = postMapper
         this.postService = postService
         this.authenticationService = authenticationService
     }
 
     @PostMapping
     Mono<ResponseEntity> createPost(@RequestBody PostDTO postDTO) {
-        postService.createPost(postDTO, authenticationService.getPrincipalSub())
+        postService.createPost(postDTO.getContent(), authenticationService.getPrincipalSub())
+                .map(postMapper::mapToPostDto)
                 .map(ResponseEntity::ok)
     }
 
     @PutMapping("/{postId}")
     Mono<ResponseEntity> updatePost(@RequestBody PostDTO postDTO, @PathVariable("postId") String postId) {
-        postService.updatePost(postDTO, postId, authenticationService.getPrincipalSub())
+        postService.updatePost(postDTO.getContent(), postId, authenticationService.getPrincipalSub())
+                .map(postMapper::mapToPostDto)
                 .map(ResponseEntity::ok)
     }
 

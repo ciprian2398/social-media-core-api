@@ -1,6 +1,7 @@
 package com.socialmedia.coreapi.controller
 
-import com.socialmedia.coreapi.model.User
+import com.socialmedia.coreapi.dto.FullDetailsUserDTO
+import com.socialmedia.coreapi.mapper.UserMapper
 import com.socialmedia.coreapi.service.AuthenticationService
 import com.socialmedia.coreapi.service.UserService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -14,18 +15,22 @@ import reactor.core.publisher.Mono
 @RequestMapping("/api/v1/users")
 class UserController {
 
-    private final UserService userService
+    private UserMapper userMapper
+    private UserService userService
     private AuthenticationService authenticationService;
 
-    UserController(UserService userService,
+    UserController(UserMapper userMapper,
+                   UserService userService,
                    AuthenticationService authenticationService) {
+        this.userMapper = userMapper
         this.userService = userService
         this.authenticationService = authenticationService
     }
 
     @GetMapping
-    Flux<User> getAllUsers() {
+    Flux<FullDetailsUserDTO> getAllUsers2() {
         userService.findAllUsers()
+                .map(userMapper::mapToFullDetailsUserDto)
     }
 
     @PostMapping("follow")

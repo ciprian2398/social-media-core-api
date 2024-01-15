@@ -7,9 +7,9 @@ import reactor.core.publisher.Mono
 
 interface PostService {
 
-    Mono<Post> createPost(PostDTO postDTO, String sub)
+    Mono<Post> createPost(String content, String sub)
 
-    Mono<Post> updatePost(PostDTO postDTO, String postId, String sub)
+    Mono<Post> updatePost(String content, String postId, String sub)
 
     Mono<Void> deletePost(String postId, String sub)
 

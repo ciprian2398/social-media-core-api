@@ -22,23 +22,23 @@ class PostServiceImpl implements PostService {
     }
 
     @Override
-    Mono<Post> createPost(PostDTO postDTO, String sub) {
+    Mono<Post> createPost(String content, String sub) {
         userRepository.findBySubject(sub)
                 .flatMap(user -> {
                     Post post = new Post();
                     post.setUserId(user.getId())
-                    post.setContent(postDTO.getContent())
+                    post.setContent(content)
                     postRepository.save(post)
                 })
     }
 
     @Override
-    Mono<Post> updatePost(PostDTO postDTO, String postId, String sub) {
+    Mono<Post> updatePost(String content, String postId, String sub) {
         postRepository.findById(postId)
                 .zipWith(userRepository.findBySubject(sub))
                 .filter((tuple) -> tuple.t1.userId == tuple.t2.getId())
                 .flatMap(tuple -> {
-                    tuple.t1.setContent(postDTO.getContent())
+                    tuple.t1.setContent(content)
                     postRepository.save(tuple.t1)
                 })
     }
