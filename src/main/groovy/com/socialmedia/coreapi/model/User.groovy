@@ -15,5 +15,5 @@ class User {
     String givenName
     String familyName
     String email
-    List<ObjectId> followers = []
+    List<ObjectId> following = []
 }

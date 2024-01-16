@@ -27,10 +27,10 @@ class UserServiceImpl implements UserService {
         userWhichFollows
                 .zipWith(userRepository.findById(userToBeFollowed))
                 .filter(tuple -> !tuple.t1.getId().equals(tuple.t2.getId()))
-                .filter(tuple -> !tuple.t2.followers.contains(tuple.t1.getId()))
+                .filter(tuple -> !tuple.t1.following.contains(tuple.t2.getId()))
                 .flatMap(tuple -> {
-                    tuple.t2.followers.add(tuple.t1.getId())
-                    userRepository.save(tuple.t2)
+                    tuple.t1.following.add(tuple.t2.getId())
+                    userRepository.save(tuple.t1)
                 }).then()
     }
 
@@ -39,10 +39,10 @@ class UserServiceImpl implements UserService {
         userWhichFollows
                 .zipWith(userRepository.findById(userToBeUnfollowed))
                 .filter(tuple -> !tuple.t1.getId().equals(tuple.t2.getId()))
-                .filter(tuple -> tuple.t2.followers.contains(tuple.t1.getId()))
+                .filter(tuple -> tuple.t1.following.contains(tuple.t2.getId()))
                 .flatMap(tuple -> {
-                    tuple.t2.followers.remove(tuple.t1.getId())
-                    userRepository.save(tuple.t2)
+                    tuple.t1.following.remove(tuple.t2.getId())
+                    userRepository.save(tuple.t1)
                 }).then()
     }
 

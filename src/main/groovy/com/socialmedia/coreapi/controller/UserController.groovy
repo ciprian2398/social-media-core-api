@@ -4,6 +4,7 @@ import com.socialmedia.coreapi.dto.FullDetailsUserDTO
 import com.socialmedia.coreapi.mapper.UserMapper
 import com.socialmedia.coreapi.service.AuthenticationService
 import com.socialmedia.coreapi.service.UserService
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -27,8 +28,9 @@ class UserController {
         this.authenticationService = authenticationService
     }
 
+    @Operation(summary = "Get all users")
     @GetMapping
-    Flux<FullDetailsUserDTO> getAllUsers2() {
+    Flux<FullDetailsUserDTO> getAllUsers() {
         userService.findAllUsers()
                 .map(userMapper::mapToFullDetailsUserDto)
     }
