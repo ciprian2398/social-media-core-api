@@ -14,5 +14,5 @@ import org.mapstruct.ReportingPolicy;
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS
 )
-public interface MapStructConfig {
+interface MapStructConfig {
 }
