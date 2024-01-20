@@ -35,3 +35,12 @@ services:
       - --import-realm
     volumes:
       - ./keycloak/realm.json:/opt/keycloak/data/import/realm.json
+
+
+  ollama:
+    container_name: ollama
+    image: ollama/ollama:latest
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - 11434:11434
